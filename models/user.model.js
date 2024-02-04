@@ -12,12 +12,10 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    unique: true,
   },
   phone: {
     type: String,
     required: true,
-    unique: true,
   },
   village: {
     type: String,

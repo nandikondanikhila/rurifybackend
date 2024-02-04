@@ -6,7 +6,7 @@ const app = express.Router();
 require("dotenv").config();
 
 app.post("/signup", async (req, res) => {
-  let { name, email, password, phone, village } = req.body;
+  let { name, email, phone, village } = req.body;
   try {
     let existinguser = await User.findOne({ email });
     if (existinguser) {
