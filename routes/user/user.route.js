@@ -31,39 +31,28 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/signin", async (req, res) => {
+  let { password, email } = req.body;
   try {
-    let { password, email } = req.body;
     let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ ok: false, message: "User Not found" });
-    }
+    if (!user)
+      return res.status(404).json({ ok: false, message: "User not found" });
     const matchPassword = bcrypt.compareSync(password, user.password);
-    if (!user.adminApproved) {
-      return res.status(403).json({
-        ok: false,
-        message:
-          "Admin not approved your profile. please reachout to the adminstrator to give the access to login.",
-      });
-    }
-    if (matchPassword) {
-      const jwtSecret = process.env.JWT_SECRECT;
-      const token = jwt.sign(
-        { email: user.email, id: user._id, role: "user" },
-        jwtSecret
-      );
-      res.cookie("token", token, {
-        httpOnly: false,
-        sameSite: "none",
-        secure: true,
-      });
+    if (!matchPassword) {
       return res
-        .status(200)
-        .json({ ok: true, message: "User logged successfully" });
+        .status(400)
+        .json({ ok: false, message: "Please enter correct password" });
     }
-
-    if (user.email) {
-      return res.send(user);
-    }
+    const jwtSecret = process.env.JWT_SECRECT;
+    const token = jwt.sign(
+      { email: user.email, id: user._id, role: "user" },
+      jwtSecret
+    );
+    res.cookie("token", token, {
+      httpOnly: false,
+      sameSite: "none",
+      secure: true,
+    });
+    return res.status(200).json({ ok: true, message: "Signed successfully" });
   } catch (e) {
     res.status(404).send(e.message);
   }
@@ -75,7 +64,7 @@ app.get("/valid", async (req, res) => {
     if (!token)
       return res
         .status(403)
-        .json({ ok: false, message: "User not authorized" });
+        .json({ ok: false, message: "token not authorized" });
     const { id, email } = jwt.decode(token);
     const user = await User.findOne({ _id: id, email });
     if (!user) {
