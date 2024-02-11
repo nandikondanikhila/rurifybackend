@@ -11,7 +11,7 @@ const issuesRouter = require("./routes/issues/issue.route.js");
 const app = express();
 const PORT = process.env.PORT || 8080;
 const corsOptions = {
-  origin: 'https://rurify.vercel.app', 
+  origin: 'https://rurifyui.vercel.app', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
   credentials: true, 
   exposedHeaders: ['Content-Length', 'Authorization'], 
