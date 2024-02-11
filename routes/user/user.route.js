@@ -6,7 +6,7 @@ const app = express.Router();
 require("dotenv").config();
 
 app.post("/signup", async (req, res) => {
-  let { name, email, phone, village } = req.body;
+  let { name, email, phone, village, aadhar } = req.body;
   try {
     let existinguser = await User.findOne({ email });
     if (existinguser) {
@@ -18,6 +18,7 @@ app.post("/signup", async (req, res) => {
       name,
       email,
       phone,
+      aadhar,
       village,
       adminApproved: false,
     });
@@ -88,14 +89,14 @@ app.get("/", async (req, res) => {
   try {
     if (limit && page) {
       let users = await User.find()
-        .select("name email phone village adminApproved")
+        .select("name email phone village adminApproved aadhar")
         .skip((page - 1) * limit)
         .limit(limit);
 
       return res.status(200).json({ ok: true, data: users });
     } else {
       let users = await User.find().select(
-        "name email phone village adminApproved"
+        "name email phone village adminApproved aadhar"
       );
       return res.status(200).json({ ok: true, data: users });
     }
