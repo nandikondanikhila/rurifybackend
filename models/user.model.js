@@ -21,6 +21,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  aadhar: {
+    type: String,
+    required: true,
+  },
   adminApproved: {
     type: Boolean,
     required: false,
